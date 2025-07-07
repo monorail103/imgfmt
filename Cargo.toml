@@ -1,0 +1,23 @@
+[package]
+name = "imgfmt"
+version = "0.1.0"
+edition = "2021"
+authors = ["m1031 <ro22062b@osaka-pct.ac.jp>"]
+
+[package.metadata.release]
+release = false
+
+# https://github.com/rustwasm/wasm-pack/issues/1247
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+worker = { version = "0.6.0" }
+worker-macros = { version = "0.6.0" }
+console_error_panic_hook = { version = "0.1.7" }
+image = { version = "0.25.6", features = ["jpeg", "png", "webp", "bmp", "gif"] }
+worker-router = "1.0.0"
+serde = { version = "1.0.219", features = ["derive"] }
