@@ -7,7 +7,7 @@ pub struct ConversionParams {
     pub quality: Option<u8>,    // 画像のクオリティ（オプション）
     pub width: Option<u32>,     // 変換後の画像の幅（オプション）
     pub height: Option<u32>,    // 変換後の画像の高さ（オプション）
-    pub watermark: Option<WaterMark>, // ウォーターマークの情報（オプション）
+    // pub watermark: Option<WaterMark>, // ウォーターマークの情報（オプション）
 }
 
 // 画像処理の結果をまとめるstruct
@@ -17,10 +17,10 @@ pub struct ImageOutput {
     pub mime_type: String,
 }
 
-#[derive(Debug, Deserialize)]
-pub struct WaterMark {
-    pub text: String,
-    pub position: (u32, u32), // (x, y) 座標
-    pub font_size: u32,
-    pub color: String, // 色を表す文字列（例: "rgba(255, 255, 255, 0.5)"）
-}
+// #[derive(Debug, Deserialize)]
+// pub struct WaterMark {
+//     pub text: String,
+//     pub position: (u32, u32), // (x, y) 座標
+//     pub font_size: u32,
+//     pub color: String, // 色を表す文字列（例: "rgba(255, 255, 255, 0.5)"）
+// }
