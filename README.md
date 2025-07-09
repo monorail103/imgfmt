@@ -11,6 +11,7 @@ Cloudflare Workers上で動作することを前提とした、画像フォー�
 
 ### 保存機能
 - Cloudflare R2に保存
+- 
 
 ## 技術スタック
 - Rust

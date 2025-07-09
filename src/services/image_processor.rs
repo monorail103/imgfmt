@@ -12,7 +12,7 @@ use std::io::Cursor;
  * @throws: 変換に失敗した場合はエラーを返します
  */
 pub fn process_image(bytes: &[u8], params: &ConversionParams) -> Result<ImageOutput, Box<dyn std::error::Error>> {
-    println!("画像処理を実行中... パラメータ: {:?}", params);
+    // println!("画像処理を実行中... パラメータ: {:?}", params);
 
     // バイト配列から画像を読み込み
     let mut img = image::load_from_memory(bytes).map_err(|e| {
