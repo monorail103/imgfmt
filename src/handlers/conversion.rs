@@ -2,7 +2,8 @@ use worker::*;
 
 use crate::types::{
     ConversionParams,
-    ImageOutput
+    ImageOutput,
+    R2config,
 };
 
 use crate::services;
@@ -13,18 +14,6 @@ pub async fn handle_image_conversion(mut req: Request, ctx: RouteContext<()>) ->
 
     let url = req.url()?;
     let query_params: std::collections::HashMap<_, _> = url.query_pairs().into_owned().collect();
-
-    // ipアドレスを取得
-    let ip_address: String = match req.headers().get("CF-Connecting-IP") {
-        Ok(Some(ip)) => ip.to_string(),
-        _ => return Response::error("IP address not found", 400),
-    };
-
-    // KVストアにIPアドレスを保存、もしくは制限回数に達していればブロッキング
-    if let Err(e) = services::log_ip_address(&ctx, &ip_address).await {
-        console_log!("Failed to log IP address {}: {}", ip_address, e);
-        return Response::error("Internal server error", 500);
-    }
     
     let params = ConversionParams {
         format: match query_params.get("format") {
@@ -36,7 +25,19 @@ pub async fn handle_image_conversion(mut req: Request, ctx: RouteContext<()>) ->
         height: query_params.get("height").and_then(|h| h.parse().ok()),
         // watermark: None, // UIの改善をしてから
     };
-    
+
+    // R2での保存設定を取得
+    let r2_config = R2config {
+        valid_date: match query_params.get("valid_date") {
+            Some(date) => date.clone(),
+            None => return Response::error("Query parameter 'valid_date' is required", 400),
+        },
+        delete_password: match query_params.get("delete_password") {
+            Some(password) => password.clone(),
+            None => return Response::error("Query parameter 'delete_password' is required", 400),
+        },
+    };
+
     // リクエストボディから画像データを取得
     let image_bytes = req.bytes().await?;
     if image_bytes.is_empty() {
@@ -61,7 +62,7 @@ pub async fn handle_image_conversion(mut req: Request, ctx: RouteContext<()>) ->
     // アップロードの試行
     console_log!("Starting upload to R2: {}", file_name);
     while attempt < max_attempts && !uploaded {
-        match services::upload_to_r2(&ctx, &file_name, &output.bytes).await {
+        match services::upload_to_r2(&ctx, &file_name, &output.bytes, &r2_config).await {
             Ok(_) => {
                 uploaded = true;
                 console_log!("File uploaded to R2: {}", file_name);

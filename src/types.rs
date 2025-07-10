@@ -7,7 +7,21 @@ pub struct ConversionParams {
     pub quality: Option<u8>,    // 画像のクオリティ（オプション）
     pub width: Option<u32>,     // 変換後の画像の幅（オプション）
     pub height: Option<u32>,    // 変換後の画像の高さ（オプション）
-    // pub watermark: Option<WaterMark>, // ウォーターマークの情報（オプション）
+    
+}
+
+// R2内での保存に関する設定をまとめるstruct
+#[derive(Debug, Deserialize)]
+pub struct R2config {
+    pub valid_date: String, // 有効期限（例: "2023-12-31T23:59:59Z"）
+    pub delete_password: String, // 削除用パスワード
+}
+
+#[derive(Debug, Deserialize)]
+pub struct FileRecord {
+    pub valid_date: String, // 有効期限
+    pub delete_password: String, // 削除用パスワード
+    pub is_valid: bool, // ファイルが有効かどうか
 }
 
 // 画像処理の結果をまとめるstruct
