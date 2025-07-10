@@ -83,3 +83,4 @@ pub fn process_image(bytes: &[u8], params: &ConversionParams) -> Result<ImageOut
         mime_type: mime_type.to_string(),
     })
 }
+

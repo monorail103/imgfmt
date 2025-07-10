@@ -88,7 +88,7 @@ pub async fn handle_image_conversion(mut req: Request, ctx: RouteContext<()>) ->
     headers.set("Content-Type", &output.mime_type)?; // MIMEタイプ
     headers.set("Content-Disposition", &format!("inline; filename=\"{}\"", file_name))?; // ファイル名
     headers.set("X-File-Id", &file_id)?; // 独自ID
-    headers.set("Location", &format!("/r2/{}", file_name))?; // アップロード先URL
+    headers.set("Location", &format!("/fileget/{}", file_name))?; // アップロード先URL
 
 
     Ok(Response::from_bytes(output.bytes)?.with_headers(headers))
